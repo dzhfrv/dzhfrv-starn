@@ -4,6 +4,7 @@ from django.urls import path, include
 v1 = [
     path('v1/', include('backend.auth_jwt.urls')),
     path('v1/', include('backend.user.urls')),
+    path('v1/', include('backend.post.urls')),
 ]
 
 urlpatterns = [
