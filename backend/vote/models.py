@@ -14,7 +14,6 @@ class Vote(models.Model):
         on_delete=models.DO_NOTHING,
         related_name="post_votes",
     )
-    vote_type = models.CharField()
 
     class Meta:
-        unique_together = ('user', 'post', 'vote_type')
+        unique_together = ('user', 'post')

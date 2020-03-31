@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     'backend.user',
     'backend.post',
+    'backend.vote',
 ]
 
 AUTH_USER_MODEL = 'user.User'
