@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'backend.user',
+    'backend.post',
 ]
 
 AUTH_USER_MODEL = 'user.User'
