@@ -5,6 +5,7 @@ v1 = [
     path('v1/', include('backend.auth_jwt.urls')),
     path('v1/', include('backend.user.urls')),
     path('v1/', include('backend.post.urls')),
+    path('v1/', include('backend.vote.urls')),
 ]
 
 urlpatterns = [

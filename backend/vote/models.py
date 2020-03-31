@@ -7,12 +7,12 @@ class Vote(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="user_votes",
+        related_name="votes",
     )
     post = models.ForeignKey(
         Post,
         on_delete=models.DO_NOTHING,
-        related_name="post_votes",
+        related_name="votes",
     )
 
     class Meta:
