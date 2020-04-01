@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import Post
-from .serializers import PostSerializer
+from .serializers import PostSerializer, DetailPostSerializer
 
 
 class PostManager(viewsets.ViewSet):
@@ -13,7 +13,7 @@ class PostManager(viewsets.ViewSet):
     def list(self, request):
         """GET /api/v1/posts/"""
         queryset = Post.objects.filter(author=request.user)
-        serializer = PostSerializer(queryset, many=True)
+        serializer = DetailPostSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def create(self, request):
@@ -27,5 +27,6 @@ class PostManager(viewsets.ViewSet):
         """GET /api/v1/posts/<pk>/"""
         queryset = Post.objects.filter(author=request.user)
         user = get_object_or_404(queryset, pk=pk)
-        serializer = PostSerializer(user)
+        serializer = DetailPostSerializer(user)
+        # print(serializer.data)
         return Response(serializer.data)

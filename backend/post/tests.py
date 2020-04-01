@@ -34,65 +34,59 @@ class TestPostResource(BaseTestClass):
         }
 
     def test_get_all_posts(self):
-        resp = self.client.get(self.endpoint)
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_all_posts_no_token(self):
         unknown_user = APIClient()
-        resp = unknown_user.get(self.endpoint)
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = unknown_user.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_post_success(self):
-        resp = self.client.post(self.endpoint, self.new_post)
-        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(resp.json(), {'id': Post.objects.last().id})
+        response = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.json(), {'id': Post.objects.last().id})
         self.assertEqual(Post.objects.count(), 3)
 
     def test_update_post(self):
-        resp = self.client.post(f'{self.endpoint}{self.post.id}/')
-        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        response = self.client.post(f'{self.endpoint}{self.post.id}/')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_create_posts_no_token(self):
         unknown_user = APIClient()
-        resp = unknown_user.post(self.endpoint)
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = unknown_user.post(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_post_duplicate_title(self):
         self.new_post['title'] = 'title 2'
-        resp = self.client.post(self.endpoint, self.new_post)
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            resp.json(),
+            response.json(),
             {'title': ['post with this title already exists.']}
         )
 
     def test_create_post_without_text(self):
         self.new_post['text'] = ''
-        resp = self.client.post(self.endpoint, self.new_post)
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            resp.json(),
+            response.json(),
             {'text': ['This field may not be blank.']}
         )
 
     def test_create_post_without_title(self):
         self.new_post['title'] = ''
-        resp = self.client.post(self.endpoint, self.new_post)
-        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        response = self.client.post(self.endpoint, self.new_post)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            resp.json(),
+            response.json(),
             {'title': ['This field may not be blank.']}
         )
 
-    def test_get_post_unauth(self):
+    def test_get_post_no_token(self):
         unknown_user = APIClient()
-        resp = unknown_user.get(f'{self.endpoint}{self.post.id}/')
-        self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = unknown_user.get(f'{self.endpoint}{self.post.id}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_post_success(self):
-        resp = self.client.get(f'{self.endpoint}{self.post.id}/')
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        expected = PostSerializer(
-            Post.objects.get(pk=self.post.pk)).data
-        self.assertEqual(resp.json(), expected)
 

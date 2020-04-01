@@ -11,19 +11,19 @@ class VoteManager(ViewSet):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request):
-        """POST /likes/ {'post': <pk>}"""
+        """POST /votes/ {'post': <pk>}"""
         data = dict()
         data['post'] = request.data['post']
         data['user'] = request.user.pk
 
         serializer = VoteSerializer(data=data)
         if serializer.is_valid():
-            vote = serializer.save(user=request.user)
+            serializer.save(user=request.user)
             return Response("success", status=status.HTTP_201_CREATED)
 
-        existed_like = Vote.objects.filter(
+        existed_vote = Vote.objects.filter(
             user=request.user,
             post=data['post'],
         )
-        existed_like.delete()
-        return Response(status=status.HTTP_200_OK)
+        existed_vote.delete()
+        return Response("post already voted", status=status.HTTP_200_OK)
